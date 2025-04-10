@@ -1,0 +1,55 @@
+import random
+import time
+
+def is_sorted(arr):
+    return all(arr[i] <= arr[i+1] for i in range(len(arr)-1))
+
+def bogo_sort(arr):
+    attempts = 0
+    while not is_sorted(arr):
+        random.shuffle(arr)  # Baraja aleatoriamente
+        attempts += 1
+    return arr, attempts
+
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    return merge(left, right)
+
+def merge(left, right):
+    result = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
+
+random_list = [3, 1, 4, 2, 5, 0, 6, 7]
+sorted_list = list(range(8))
+reversed_list = list(range(7, -1, -1))
+
+for name, test_list in [('Aleatoria', random_list), ('Ordenada', sorted_list), ('Invertida', reversed_list)]:
+    if len(test_list) <= 8:
+        print(f"\nBogo Sort - Lista {name}: {test_list}")
+        start = time.time()
+        sorted_bogo, attempts = bogo_sort(test_list.copy())
+        end = time.time()
+        print(f"Resultado: {sorted_bogo}")
+        print(f"Intentos: {attempts}, Tiempo: {end - start:.5f} segundos")
+
+for name, test_list in [('Aleatoria', random_list), ('Ordenada', sorted_list), ('Invertida', reversed_list)]:
+    print(f"\nMerge Sort - Lista {name}: {test_list}")
+    start = time.time()
+    sorted_merge = merge_sort(test_list.copy())
+    end = time.time()
+    print(f"Resultado: {sorted_merge}")
+    print(f"Tiempo: {end - start:.5f} segundos")
